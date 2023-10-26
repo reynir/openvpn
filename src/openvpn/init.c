@@ -483,9 +483,11 @@ init_connection_list(struct context *c)
     if (c->options.remote_random)
     {
         int i;
-        for (i = 0; i < l->len; ++i)
+        for (i = l->len - 1; i > 1; --i)
         {
-            const int j = get_random() % l->len;
+            /* This is not evenly distributed, but for small lists this should
+             * be neglible */
+            const int j = get_random() % (i + 1);
             if (i != j)
             {
                 struct connection_entry *tmp;
