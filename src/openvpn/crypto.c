@@ -1139,6 +1139,9 @@ static const char printable_char_fmt[] =
 static const char unprintable_char_fmt[] =
     "Non-Hex, unprintable character (0x%02x) found at line %d in key file '%s' (%d/%d/%d bytes found/min/max)";
 
+static const char odd_hex_digits_fmt[] =
+    "Odd number of hex digits found in key file '%s'";
+
 /* read key from file */
 
 void
@@ -1290,6 +1293,14 @@ read_key_file(struct key2 *key2, const char *file, const unsigned int flags)
         }
         ++cp;
         --size;
+    }
+
+    /* fail on odd number of hex digits */
+    if (hb_index > 0)
+    {
+        msg(M_FATAL,
+            odd_hex_digits_fmt,
+            print_key_filename(file, flags & RKF_INLINE));
     }
 
     /*
